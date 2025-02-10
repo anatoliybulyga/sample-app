@@ -9,3 +9,12 @@ export const getItemValueLabel = (itemValueLabel: string) => {
 
   return itemValueLabel.split('_')[0].split("_").join(" ").toLowerCase();
 }
+
+
+export const getItemKey = (itemLabel: string) => {
+  if (!itemLabel.endsWith('_value')) return itemLabel;
+
+  const keyWithoutValue = itemLabel.slice(0, -6);
+
+return keyWithoutValue;
+}

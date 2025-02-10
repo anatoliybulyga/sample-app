@@ -1,7 +1,8 @@
 import { useSample } from '@/context';
 import { useHoveredItem } from '@/context/HoveredItem';
 import { SampleType } from '@/types';
-import { getItemLabel, getItemValueLabel } from '@/utils';
+import { getItemLabel, getItemValueLabel, getItemKey } from '@/utils';
+import { useFilteredImages } from '@/context/FilteredImagesContext';
 
 const SampleSubData = ({ data }: { data: Record<string, string> }) => {
   const { setHoveredItem } = useHoveredItem();
@@ -26,6 +27,19 @@ const SampleSubData = ({ data }: { data: Record<string, string> }) => {
 
 const SampleData = () => {
   const { sampleItems } = useSample();
+  const { setSelectedFilterKeys } = useFilteredImages();
+
+  const handleFilterClick = (data: Record<string, string>) => {
+    const keys: string[] = []
+    Object.keys(data)
+      .filter((key) => key !== 'id')
+      .forEach((key) => {
+        const keyData = getItemKey(key)
+        keys.push(keyData)
+
+      });
+      setSelectedFilterKeys(keys);
+  };
 
   if (!sampleItems) return null;
 
@@ -37,7 +51,7 @@ const SampleData = () => {
           const label = getItemLabel(key);
           return (
             <div key={key}>
-              <p className='capitalize'>{label}</p>
+              <p className='capitalize cursor-pointer hover:text-blue-500' onClick={() => handleFilterClick(sampleItems[key])}>{label}</p>
               <SampleSubData data={sampleItems[key]} />
             </div>
           );
